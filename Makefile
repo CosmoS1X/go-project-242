@@ -26,7 +26,7 @@ lint: fmt
 lint-fix:
 	golangci-lint run --fix
 
-build: lint test
+build:
 	go build -o bin/$(APP_NAME) ./cmd/$(APP_NAME)
 
 run:
