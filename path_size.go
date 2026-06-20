@@ -3,6 +3,7 @@ package code
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 // threshold is the size in bytes at which to switch to the next unit (KB, MB, etc.).
@@ -33,7 +34,8 @@ func fmtHuman(size float64, human bool) string {
 
 // GetPathSize returns the size of a file or directory at the given path.
 // If human is true, the size is returned in a human-readable format.
-func GetPathSize(path string, human bool) (string, error) {
+// If all is true, hidden files and directories are included in the size calculation.
+func GetPathSize(path string, human, all bool) (string, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return "", err
@@ -59,6 +61,10 @@ func GetPathSize(path string, human bool) (string, error) {
 		info, err := entry.Info()
 		if err != nil {
 			return "", err
+		}
+
+		if !all && strings.HasPrefix(info.Name(), ".") {
+			continue
 		}
 
 		size += info.Size()
