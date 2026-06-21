@@ -13,21 +13,31 @@ import (
 func main() {
 	cmd := &cli.Command{
 		Name:                   "hexlet-path-size",
-		Usage:                  "print size of a file or directory",
+		Usage:                  "print size of a file or directory; supports -r (recursive), -H (human-readable), -a (include hidden)",
 		ArgsUsage:              "<path>",
 		UseShortOptionHandling: true,
 		Flags: []cli.Flag{
+			//nolint:goconst // help output intentionally repeats the same default text
 			&cli.BoolFlag{
-				Name:    "human",
-				Aliases: []string{"H"},
-				Value:   false,
-				Usage:   "human-readable sizes (auto-select unit)",
+				Name:        "recursive",
+				Aliases:     []string{"r"},
+				Value:       false,
+				Usage:       "recursive size of directories",
+				DefaultText: "false",
 			},
 			&cli.BoolFlag{
-				Name:    "all",
-				Aliases: []string{"a"},
-				Value:   false,
-				Usage:   "include hidden files and directories",
+				Name:        "human",
+				Aliases:     []string{"H"},
+				Value:       false,
+				Usage:       "human-readable sizes (auto-select unit)",
+				DefaultText: "false",
+			},
+			&cli.BoolFlag{
+				Name:        "all",
+				Aliases:     []string{"a"},
+				Value:       false,
+				Usage:       "include hidden files and directories",
+				DefaultText: "false",
 			},
 		},
 		Arguments: []cli.Argument{
@@ -49,8 +59,9 @@ func main() {
 			path := c.StringArg("path")
 			human := c.Bool("human")
 			all := c.Bool("all")
+			recursive := c.Bool("recursive")
 
-			size, err := code.GetPathSize(path, human, all)
+			size, err := code.GetPathSize(path, recursive, human, all)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
 				os.Exit(1)
