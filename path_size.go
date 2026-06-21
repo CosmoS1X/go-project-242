@@ -3,6 +3,7 @@ package code
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -32,42 +33,69 @@ func fmtHuman(size float64, human bool) string {
 	return fmt.Sprintf("%.1f%s", size, units[unitIdx])
 }
 
+// shouldSkip determines whether a file or directory should be skipped based on its name and the includeHidden flag.
+func shouldSkip(name string, includeHidden bool) bool {
+	return !includeHidden && strings.HasPrefix(name, ".")
+}
+
+// walkDirSize recursively calculates the total size of a directory, optionally including hidden files and directories.
+func walkDirSize(path string, recursive, includeHidden bool) (int64, error) {
+	entries, err := os.ReadDir(path)
+	if err != nil {
+		return 0, err
+	}
+
+	var size int64
+
+	for _, entry := range entries {
+		name := entry.Name()
+		if shouldSkip(name, includeHidden) {
+			continue
+		}
+
+		entryPath := filepath.Join(path, name)
+		info, err := entry.Info()
+		if err != nil {
+			return 0, err
+		}
+
+		if info.IsDir() {
+			if !recursive {
+				continue
+			}
+
+			dirSize, err := walkDirSize(entryPath, recursive, includeHidden)
+			if err != nil {
+				return 0, err
+			}
+
+			size += dirSize
+			continue
+		}
+
+		size += info.Size()
+	}
+
+	return size, nil
+}
+
 // GetPathSize returns the size of a file or directory at the given path.
+// If recursive is true, the size of directories is calculated recursively.
 // If human is true, the size is returned in a human-readable format.
 // If all is true, hidden files and directories are included in the size calculation.
-func GetPathSize(path string, human, all bool) (string, error) {
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return "", err
 	}
 
 	if !info.IsDir() {
-		size := float64(info.Size())
-		return fmtHuman(size, human), nil
+		return fmtHuman(float64(info.Size()), human), nil
 	}
 
-	entries, err := os.ReadDir(path)
+	size, err := walkDirSize(path, recursive, all)
 	if err != nil {
 		return "", err
-	}
-
-	var size int64
-
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-
-		info, err := entry.Info()
-		if err != nil {
-			return "", err
-		}
-
-		if !all && strings.HasPrefix(info.Name(), ".") {
-			continue
-		}
-
-		size += info.Size()
 	}
 
 	return fmtHuman(float64(size), human), nil
