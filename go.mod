@@ -1,4 +1,4 @@
-module code
+module github.com/CosmoS1X/pathsize
 
 go 1.26.3
 

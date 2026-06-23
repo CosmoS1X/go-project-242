@@ -9,7 +9,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	appname := "hexlet-path-size"
+	appname := "pathsize"
 
 	t.Run("prints size and path for existing file", func(t *testing.T) {
 		var stdout bytes.Buffer

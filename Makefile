@@ -1,5 +1,5 @@
 RUN_ARGS ?=
-APP_NAME := hexlet-path-size
+APP_NAME := pathsize
 
 .PHONY: fmt tidy test lint lint-fix build run vuln clean
 

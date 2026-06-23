@@ -1,4 +1,4 @@
-package code
+package pathsize
 
 import (
 	"fmt"
@@ -79,11 +79,11 @@ func walkDirSize(path string, recursive, includeHidden bool) (int64, error) {
 	return size, nil
 }
 
-// GetPathSize returns the size of a file or directory at the given path.
+// Get returns the size of a file or directory at the given path.
 // If recursive is true, the size of directories is calculated recursively.
 // If human is true, the size is returned in a human-readable format.
 // If all is true, hidden files and directories are included in the size calculation.
-func GetPathSize(path string, recursive, human, all bool) (string, error) {
+func Get(path string, recursive, human, all bool) (string, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return "", err
