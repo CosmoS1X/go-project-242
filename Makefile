@@ -14,6 +14,12 @@ tidy:
 test:
 	go test -v ./...
 
+test-race:
+	go test -race -v ./...
+
+test-bench:
+	go test -bench=. -benchmem
+
 test-coverage:
 	go test -v -cover -coverprofile=coverage.out ./...
 
