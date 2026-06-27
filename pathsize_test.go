@@ -109,3 +109,32 @@ func TestGet(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkGet(b *testing.B) {
+	cases := []struct {
+		name      string
+		path      string
+		recursive bool
+		human     bool
+		all       bool
+	}{
+		{name: "directory recursive human hidden", path: testdataDir, recursive: true, human: true, all: true},
+		{name: "directory recursive hidden", path: testdataDir, recursive: true, all: true},
+		{name: "directory recursive", path: testdataDir, recursive: true},
+		{name: "directory human", path: testdataDir, human: true},
+		{name: "directory", path: testdataDir},
+		{name: "file human", path: filepath.Join(testdataDir, testFile), human: true},
+		{name: "file", path: filepath.Join(testdataDir, testFile)},
+	}
+
+	for _, c := range cases {
+		b.Run(c.name, func(b *testing.B) {
+			for b.Loop() {
+				_, err := Get(c.path, c.recursive, c.human, c.all)
+				if err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
+	}
+}
