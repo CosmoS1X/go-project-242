@@ -15,69 +15,55 @@ func TestRun(t *testing.T) {
 	errMsg := "Error:"
 
 	cases := []struct {
-		name            string
-		args            []string
-		exicode         int
-		wantStdoutText  string
-		wantStderrText  string
-		wantStdoutEmpty bool
-		wantStderrEmpty bool
+		name       string
+		args       []string
+		wantCode   int
+		wantStdout string
+		wantStderr string
 	}{
 		{
-			name:            "prints size and path for existing file",
-			args:            []string{appname, path},
-			exicode:         0,
-			wantStdoutText:  "6B\t" + path + "\n",
-			wantStderrEmpty: true,
+			name:       "prints size and path for existing file",
+			args:       []string{appname, path},
+			wantStdout: "6B\t" + path + "\n",
 		},
 		{
-			name:            "prints size and path for existing directory",
-			args:            []string{appname, "-raH", directoryPath},
-			exicode:         0,
-			wantStdoutText:  "293.9KB\t" + directoryPath + "\n",
-			wantStderrEmpty: true,
+			name:       "prints size and path for existing directory",
+			args:       []string{appname, "-raH", directoryPath},
+			wantStdout: "293.9KB\t" + directoryPath + "\n",
 		},
 		{
-			name:            "returns error for nonexistent path",
-			args:            []string{appname, "unknown"},
-			exicode:         1,
-			wantStdoutEmpty: true,
-			wantStderrText:  errMsg,
+			name:       "returns error for nonexistent path",
+			args:       []string{appname, "unknown"},
+			wantCode:   1,
+			wantStderr: errMsg,
 		},
 		{
-			name:            "returns error if too many arguments are provided",
-			args:            []string{appname, "path1", "path2"},
-			exicode:         1,
-			wantStdoutEmpty: true,
-			wantStderrText:  errMsg,
+			name:       "returns error if too many arguments are provided",
+			args:       []string{appname, "path1", "path2"},
+			wantCode:   1,
+			wantStderr: errMsg,
 		},
 		{
-			name:            "returns error if no path argument is provided",
-			args:            []string{appname},
-			exicode:         1,
-			wantStdoutEmpty: true,
-			wantStderrText:  errMsg,
+			name:       "returns error if no path argument is provided",
+			args:       []string{appname},
+			wantCode:   1,
+			wantStderr: errMsg,
 		},
 	}
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			var stdout bytes.Buffer
-			var stderr bytes.Buffer
+			var stdout, stderr bytes.Buffer
 
 			code := run(c.args, &stdout, &stderr)
 
-			require.Equal(t, c.exicode, code, "expected exit code")
-			if c.wantStdoutEmpty {
+			require.Equal(t, c.wantCode, code, "expected exit code")
+			if c.wantStdout == "" {
 				require.Empty(t, stdout.String(), "expected empty stdout")
+				require.Contains(t, stderr.String(), c.wantStderr, "expected error message in stderr")
 			} else {
-				require.Equal(t, c.wantStdoutText, stdout.String(), "expected stdout")
-			}
-
-			if c.wantStderrEmpty {
+				require.Equal(t, c.wantStdout, stdout.String(), "expected stdout")
 				require.Empty(t, stderr.String(), "expected empty stderr")
-			} else {
-				require.Contains(t, stderr.String(), c.wantStderrText, "expected error message in stderr")
 			}
 		})
 	}
