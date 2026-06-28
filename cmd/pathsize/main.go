@@ -8,12 +8,12 @@ import (
 
 	"github.com/urfave/cli/v3"
 
-	"code"
+	"github.com/CosmoS1X/pathsize"
 )
 
 func run(args []string, stdout, stderr io.Writer) int {
 	cmd := &cli.Command{
-		Name:                   "hexlet-path-size",
+		Name:                   "pathsize",
 		Usage:                  "print size of a file or directory; supports -r (recursive), -H (human-readable), -a (include hidden)",
 		ArgsUsage:              "<path>",
 		UseShortOptionHandling: true,
@@ -62,7 +62,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 			all := c.Bool("all")
 			recursive := c.Bool("recursive")
 
-			size, err := code.GetPathSize(path, recursive, human, all)
+			size, err := pathsize.Get(path, recursive, human, all)
 			if err != nil {
 				return err
 			}

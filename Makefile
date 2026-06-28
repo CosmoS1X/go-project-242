@@ -1,5 +1,5 @@
 RUN_ARGS ?=
-APP_NAME := hexlet-path-size
+APP_NAME := pathsize
 
 .PHONY: fmt tidy test lint lint-fix build run vuln clean
 
@@ -13,6 +13,12 @@ tidy:
 
 test:
 	go test -v ./...
+
+test-race:
+	go test -race -v ./...
+
+test-bench:
+	go test -bench=. -benchmem
 
 test-coverage:
 	go test -v -cover -coverprofile=coverage.out ./...

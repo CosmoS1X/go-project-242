@@ -1,4 +1,4 @@
-package code
+package pathsize
 
 import (
 	"fmt"
@@ -12,7 +12,6 @@ import (
 // Adjust as needed for your use case. For example, if you want to use binary units (KiB, MiB, etc.), you can set threshold to 1024.
 const threshold float64 = 1000
 
-// fmtHuman formats the size in bytes to a human-readable string.
 func fmtHuman(size float64, human bool) string {
 	if !human {
 		return fmt.Sprintf("%.0fB", size)
@@ -33,12 +32,10 @@ func fmtHuman(size float64, human bool) string {
 	return fmt.Sprintf("%.1f%s", size, units[unitIdx])
 }
 
-// shouldSkip determines whether a file or directory should be skipped based on its name and the includeHidden flag.
 func shouldSkip(name string, includeHidden bool) bool {
 	return !includeHidden && strings.HasPrefix(name, ".")
 }
 
-// walkDirSize recursively calculates the total size of a directory, optionally including hidden files and directories.
 func walkDirSize(path string, recursive, includeHidden bool) (int64, error) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
@@ -79,11 +76,11 @@ func walkDirSize(path string, recursive, includeHidden bool) (int64, error) {
 	return size, nil
 }
 
-// GetPathSize returns the size of a file or directory at the given path.
+// Get returns the size of a file or directory at the given path.
 // If recursive is true, the size of directories is calculated recursively.
 // If human is true, the size is returned in a human-readable format.
 // If all is true, hidden files and directories are included in the size calculation.
-func GetPathSize(path string, recursive, human, all bool) (string, error) {
+func Get(path string, recursive, human, all bool) (string, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return "", err

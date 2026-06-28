@@ -1,13 +1,10 @@
-# Path Size
+# Pathsize
 
-### Hexlet tests and linter status:
-
-[![Actions Status](https://github.com/CosmoS1X/go-project-242/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/CosmoS1X/go-project-242/actions)
 [![Go](https://github.com/CosmoS1X/go-project-242/actions/workflows/go.yml/badge.svg)](https://github.com/CosmoS1X/go-project-242/actions/workflows/go.yml)
 
 ## Overview
 
-Path Size is a small CLI utility that prints the size of a file or directory.
+Pathsize is a small CLI utility that prints the size of a file or directory.
 
 ## Features
 
@@ -21,13 +18,13 @@ Path Size is a small CLI utility that prints the size of a file or directory.
 Install the CLI binary with:
 
 ```bash
-go install ./cmd/hexlet-path-size
+go install ./cmd/pathsize
 ```
 
 After installation, run:
 
 ```bash
-hexlet-path-size <path>
+pathsize <path>
 ```
 
 ## Library usage
@@ -35,12 +32,12 @@ hexlet-path-size <path>
 The package can also be used as a Go library by importing it from the module root:
 
 ```go
-import "code"
+import "github.com/CosmoS1X/pathsize"
 
-size, err := code.GetPathSize(path, recursive, human, all)
+size, err := pathsize.Get(path, recursive, human, all)
 ```
 
-`GetPathSize` returns the formatted size as a string and an error if the path cannot be read.
+`Get` returns the formatted size as a string and an error if the path cannot be read.
 
 Parameters:
 
@@ -52,7 +49,7 @@ Parameters:
 ## Usage
 
 ```bash
-hexlet-path-size [options] <path>
+pathsize [options] <path>
 ```
 
 ### Options
@@ -67,31 +64,31 @@ hexlet-path-size [options] <path>
 Show the size of a file in bytes:
 
 ```bash
-hexlet-path-size testdata/test.txt
+pathsize testdata/test.txt
 ```
 
 Show a directory size recursively:
 
 ```bash
-hexlet-path-size -r testdata
+pathsize -r testdata
 ```
 
 Show a human-readable size for a directory:
 
 ```bash
-hexlet-path-size -H testdata
+pathsize -H testdata
 ```
 
 Include hidden entries in the calculation:
 
 ```bash
-hexlet-path-size -a testdata
+pathsize -a testdata
 ```
 
 Combine multiple flags in one command:
 
 ```bash
-hexlet-path-size -raH testdata
+pathsize -raH testdata
 ```
 
 ## Output format
