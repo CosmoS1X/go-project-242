@@ -21,6 +21,8 @@ Install the CLI binary with:
 go install ./cmd/pathsize
 ```
 
+Or download the prebuilt binaries from the [releases page](https://github.com/CosmoS1X/pathsize/releases)
+
 After installation, run:
 
 ```bash
